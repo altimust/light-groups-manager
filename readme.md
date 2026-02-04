@@ -1,80 +1,66 @@
 # Light Groups Manager
 
-Модуль для Foundry VTT v12, который позволяет ГМам организовывать источники света в группы и управлять ими массово.
+Light Groups Manager is a Foundry VTT v12 module that lets GMs organize Ambient Lights into named groups and edit each group in one place.
 
-## Возможности
+## Features
 
-- **Группировка света**: Добавьте источники света в именованные группы через их настройки
-- **Массовое управление**: Включайте/выключайте все источники в группе одной кнопкой
-- **Регулировка параметров**: Изменяйте яркость, радиус и цвет для всей группы сразу
-- **Простой интерфейс**: Кнопка управления группами в панели инструментов освещения
+- Add a **Light Group** field directly in Ambient Light configuration.
+- Open a **Manage Light Groups** button from the Lighting controls toolbar.
+- Apply group-wide settings to all lights in a group:
+  - Enabled / disabled
+  - Light color
+  - Color intensity (`alpha`)
+  - Animation type
+  - Animation speed
+  - Reverse animation direction
+  - Animation intensity
+  - Is Darkness Source
+  - Provides visibility
+- Animation type options update immediately when toggling **Is Darkness Source** (no window reopen required).
 
-## Установка
+## Installation
 
-### Вручную (ваш способ)
+1. Copy the module folder to:
+   `FoundryVTT/Data/modules/light-groups-manager/`
+2. Restart Foundry VTT.
+3. Enable **Light Groups Manager** in your world module settings.
 
-1. Скопируйте все файлы в папку:
-   ```
-   FoundryVTT/Data/modules/light-groups-manager/
-   ```
+Expected structure:
 
-2. Структура должна быть такой:
-   ```
-   light-groups-manager/
-   ├── module.json
-   ├── scripts/
-   │   └── main.js
-   ├── styles/
-   │   └── styles.css
-   └── lang/
-       └── en.json
-   ```
+```
+light-groups-manager/
+├── module.json
+├── scripts/
+│   └── main.js
+├── templates/
+│   └── group-manager.html
+├── styles/
+│   ├── style.css
+│   └── styles.css
+└── lang/
+    └── en.json
+```
 
-3. Перезапустите Foundry VTT
+## Usage
 
-4. В настройках мира включите модуль "Light Groups Manager"
+### 1) Assign lights to groups
 
-## Использование
+1. Select an Ambient Light on the scene.
+2. Open its configuration.
+3. Enter a group name in **Light Group** (for example: `torches`, `streetlights`, `windows`).
+4. Save.
 
-### Добавление света в группу
+### 2) Manage group settings
 
-1. Выберите источник света на сцене
-2. Откройте его настройки (двойной клик или ПКМ → Configure)
-3. В поле **Light Group** введите название группы (например: "torches", "streetlights")
-4. Сохраните
+1. Select the **Lighting** controls on the left toolbar.
+2. Click **Manage Light Groups** (layer-group icon).
+3. Edit a group and click **Save Changes**.
 
-### Управление группами
+## Notes
 
-1. Выберите инструмент освещения на левой панели
-2. Нажмите на новую кнопку **Manage Light Groups** (иконка слоев)
-3. В открывшемся окне вы увидите все группы с их источниками света
-4. Используйте кнопки для:
-   - **Toggle On/Off** - включить/выключить все источники в группе
-   - **Brightness** - изменить яркость (слайдер от 0.5x до 2x)
-   - **Radius** - изменить радиус (слайдер от 0.5x до 2x)
-   - **Color** - изменить цвет всех источников в группе
+- Designed for Foundry VTT v12.
+- GM-only workflow (button appears for GMs).
 
-## Примеры использования
+## License
 
-**Факелы в подземелье**
-- Создайте группу "torches"
-- Добавьте все факелы в эту группу
-- Одной кнопкой потушите все факелы, когда игроки используют заклинание darkness
-
-**Уличное освещение**
-- Группа "streetlights" для фонарей
-- Группа "windows" для света из окон
-- Быстро переключайте день/ночь
-
-**Цветное освещение для атмосферы**
-- Группа "ambient" для фонового света
-- Быстро меняйте цвет для создания настроения сцены
-
-## Совместимость
-
-- Foundry VTT v12
-- Работает только для GM
-
-## Лицензия
-
-Свободное использование для личных целей
+Free to use for personal projects.
