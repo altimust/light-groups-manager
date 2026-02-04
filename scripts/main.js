@@ -104,19 +104,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
 });
 
 // Light Groups Manager Dialog
-class LightGroupsManager extends Application {
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      id: 'light-groups-manager',
-      title: 'Light Groups Manager',
-      template: 'modules/light-groups-manager/templates/group-manager.html',
-      width: 600,
-      height: 'auto',
-      classes: ['sheet', 'ambient-light-config', 'light-groups-manager'],
-      resizable: true
-    });
-  }
-
+const LightGroupsManagerMethods = {
   getData() {
     const groups = this._getGroups();
     for (const group of groups) {
@@ -131,7 +119,7 @@ class LightGroupsManager extends Application {
       groups,
       labels: this._getLabels()
     };
-  }
+  },
 
   _getLabels() {
     return {
@@ -156,11 +144,11 @@ class LightGroupsManager extends Application {
       apply: this._label('SETTINGS.Save', 'Apply Group Settings'),
       empty: this._label('LIGHTGROUPS.NoGroups', 'No light groups found. Add lights to groups by editing their configuration.')
     };
-  }
+  },
 
   _label(key, fallback) {
     return game.i18n.has(key) ? game.i18n.localize(key) : fallback;
-  }
+  },
 
   _getAnimationOptions(isDarknessSource = false) {
     const animations = isDarknessSource
@@ -178,7 +166,7 @@ class LightGroupsManager extends Application {
     }
 
     return options;
-  }
+  },
 
   _getGroups() {
     const scene = canvas.scene;
@@ -219,15 +207,13 @@ class LightGroupsManager extends Application {
           providesVision: Boolean(leadLight.config?.vision)
         };
       });
-  }
+  },
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    
+  _bindFormListeners(html) {
     html.find('.group-enabled').on('change', this._onToggleGroup.bind(this));
     html.find('.group-is-darkness-source').on('change', this._onDarknessSourceToggle.bind(this));
     html.find('.apply-group-settings').on('click', this._onApplyGroupSettings.bind(this));
-  }
+  },
 
   _onDarknessSourceToggle(event) {
     const root = $(event.currentTarget).closest('.group-control');
@@ -247,7 +233,7 @@ class LightGroupsManager extends Application {
     const hasCurrent = options.some(option => option.value === currentValue);
     select.val(hasCurrent ? currentValue : '');
     select.trigger('change');
-  }
+  },
 
   async _onToggleGroup(event) {
     const root = $(event.currentTarget).closest('.group-control');
@@ -264,11 +250,11 @@ class LightGroupsManager extends Application {
     
     await canvas.scene.updateEmbeddedDocuments('AmbientLight', updates);
     ui.notifications.info(`${groupName}: ${enabled ? 'enabled' : 'disabled'}`);
-  }
+  },
 
   _findGroup(groupName) {
     return this._getGroups().find(group => group.name === groupName);
-  }
+  },
 
   async _onApplyGroupSettings(event) {
     event.preventDefault();
@@ -311,19 +297,19 @@ class LightGroupsManager extends Application {
     }, true);
     ui.notifications.info(`${groupName}: settings updated`);
     this.render();
-  }
+  },
 
   _clamp(value, min, max) {
     if (Number.isNaN(value)) return min;
     return Math.min(max, Math.max(min, value));
-  }
+  },
 
   _getColorValue(root) {
     const picker = root.find('.group-color').get(0);
     const value = picker?.value ?? root.find('.group-color input[type="text"]').val();
     const normalized = String(value ?? '').trim();
     return /^#[0-9a-f]{6}$/i.test(normalized) ? normalized : '#ffffff';
-  }
+  },
 
   _getRangePickerValue(rangePickerEl) {
     if (!rangePickerEl) return 0;
@@ -335,4 +321,66 @@ class LightGroupsManager extends Application {
     const rangeInput = rangePickerEl.querySelector?.('input[type="range"]');
     return Number(rangeInput?.value ?? 0);
   }
+};
+
+class LightGroupsManagerV1 extends Application {
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      id: 'light-groups-manager',
+      title: 'Light Groups Manager',
+      template: 'modules/light-groups-manager/templates/group-manager.html',
+      width: 600,
+      height: 'auto',
+      classes: ['sheet', 'ambient-light-config', 'light-groups-manager'],
+      resizable: true
+    });
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    this._bindFormListeners(html);
+  }
+}
+
+Object.assign(LightGroupsManagerV1.prototype, LightGroupsManagerMethods);
+
+let LightGroupsManager = LightGroupsManagerV1;
+const hasApplicationV2 = Boolean(foundry?.applications?.api?.ApplicationV2 && foundry?.applications?.api?.HandlebarsApplicationMixin);
+
+if (hasApplicationV2) {
+  const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+  class LightGroupsManagerV2 extends HandlebarsApplicationMixin(ApplicationV2) {
+    static DEFAULT_OPTIONS = {
+      id: 'light-groups-manager',
+      tag: 'section',
+      classes: ['sheet', 'ambient-light-config', 'light-groups-manager'],
+      position: {
+        width: 600,
+        height: 'auto'
+      },
+      window: {
+        title: 'Light Groups Manager',
+        resizable: true
+      }
+    };
+
+    static PARTS = {
+      form: {
+        template: 'modules/light-groups-manager/templates/group-manager.html'
+      }
+    };
+
+    async _prepareContext() {
+      return this.getData();
+    }
+
+    _onRender(context, options) {
+      super._onRender(context, options);
+      this._bindFormListeners($(this.element));
+    }
+  }
+
+  Object.assign(LightGroupsManagerV2.prototype, LightGroupsManagerMethods);
+  LightGroupsManager = LightGroupsManagerV2;
 }

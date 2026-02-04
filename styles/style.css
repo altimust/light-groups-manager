@@ -2,6 +2,8 @@
   padding: 0.75rem;
   color: #e7d1b1;
   background: rgba(11, 10, 19, 0.9);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .light-groups-manager .window-header {
@@ -19,6 +21,7 @@
   gap: 0.75rem;
   font-family: var(--font-body);
   font-size: var(--font-size-14);
+  min-height: 0;
 }
 
 .light-groups-manager .group-control {
