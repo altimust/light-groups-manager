@@ -1,7 +1,7 @@
 {
   "id": "light-groups-manager",
   "title": "Light Groups Manager",
-  "description": "Allows GMs to organize lights into groups and control them together (toggle, brightness, radius, color).",
+  "description": "Lets GMs group Ambient Lights and apply shared settings (enabled, color, intensity, animation, darkness source, and visibility).",
   "version": "1.0.0",
   "compatibility": {
     "minimum": "12",
@@ -16,7 +16,7 @@
     "scripts/main.js"
   ],
   "styles": [
-    "styles/styles.css"
+    "styles/style.css"
   ],
   "languages": [
     {

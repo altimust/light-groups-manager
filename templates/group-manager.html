@@ -1,0 +1,96 @@
+<form class="standard-form light-groups-manager-content flexcol">
+  {{#if hasGroups}}
+    {{#each groups}}
+    <section class="group-control" data-group-id="{{this.groupId}}">
+      <header class="group-header">
+        <h3>{{this.name}}</h3>
+        <span class="light-count">{{this.lightCount}} light(s)</span>
+      </header>
+
+      <div class="form-group">
+        <label>{{../labels.enabled}}</label>
+        <div class="form-fields">
+          <input type="checkbox" class="group-enabled" {{checked this.enabled}}>
+        </div>
+        <p class="hint">{{../labels.enabledHint}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{../labels.color}}</label>
+        <div class="form-fields">
+          <color-picker class="group-color" name="groupColor" value="{{this.color}}"></color-picker>
+        </div>
+        <p class="hint">{{../labels.colorHint}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{../labels.intensity}}</label>
+        <div class="form-fields">
+          <range-picker class="group-color-intensity" name="groupColorIntensity" value="{{this.colorIntensity}}" min="0" max="1" step="0.05"></range-picker>
+        </div>
+        <p class="hint">{{../labels.intensityHint}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{../labels.animationType}}</label>
+        <div class="form-fields">
+          <select class="group-animation-type">
+            {{#each this.animationOptions}}
+            <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <p class="hint">{{../labels.animationTypeHint}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{../labels.animationSpeed}}</label>
+        <div class="form-fields">
+          <range-picker class="group-animation-speed" name="groupAnimationSpeed" value="{{this.animationSpeed}}" min="1" max="10" step="1"></range-picker>
+        </div>
+        <p class="hint">{{../labels.animationSpeedHint}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{../labels.animationReverse}}</label>
+        <div class="form-fields">
+          <input type="checkbox" class="group-animation-reverse" {{checked this.animationReverse}}>
+        </div>
+        <p class="hint">{{../labels.animationReverseHint}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{../labels.animationIntensity}}</label>
+        <div class="form-fields">
+          <range-picker class="group-animation-intensity" name="groupAnimationIntensity" value="{{this.animationIntensity}}" min="1" max="10" step="1"></range-picker>
+        </div>
+        <p class="hint">{{../labels.animationIntensityHint}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{../labels.darknessSource}}</label>
+        <div class="form-fields">
+          <input type="checkbox" class="group-is-darkness-source" {{checked this.isDarknessSource}}>
+        </div>
+        <p class="hint">{{../labels.darknessSourceHint}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{../labels.providesVision}}</label>
+        <div class="form-fields">
+          <input type="checkbox" class="group-provides-vision" {{checked this.providesVision}}>
+        </div>
+        <p class="hint">{{../labels.providesVisionHint}}</p>
+      </div>
+
+      <footer class="group-footer">
+        <button type="button" class="apply-group-settings">
+          <i class="fas fa-save"></i> {{../labels.apply}}
+        </button>
+      </footer>
+    </section>
+    {{/each}}
+  {{else}}
+    <p class="no-groups">{{labels.empty}}</p>
+  {{/if}}
+</form>
